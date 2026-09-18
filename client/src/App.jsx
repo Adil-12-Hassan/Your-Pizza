@@ -6,22 +6,40 @@ import Cart from './components/cart/Cart';
 import { useCartStore } from './store/cartStore';
 import MainPage from './pages/MainPage';
 import GalleryPage from './pages/GalleryPage';
+import AdminLogin from './admin/pages/AdminLogin';
+import AdminDashboard from './admin/pages/AdminDashboard';
+import ProtectedRoute from './components/common/ProtectedRoute';
 
-export default function App() {
+function PublicLayout({ children }) {
   const toggleCart = useCartStore((state) => state.toggleCart);
-
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
-      <main className="pt-16">
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-        </Routes>
-      </main>
+      <main className="pt-16">{children}</main>
       <Footer />
       <FloatingCartButton onClick={toggleCart} />
       <Cart />
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PublicLayout><MainPage /></PublicLayout>} />
+        <Route path="/gallery" element={<PublicLayout><GalleryPage /></PublicLayout>} />
+
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -3,10 +3,15 @@ import { useCartStore } from '../../store/cartStore';
 
 export default function CheckoutForm({ onSubmitted }) {
     const items = useCartStore((state) => state.items);
+    const appliedCoupon = useCartStore((state) => state.appliedCoupon);
+    const couponError = useCartStore((state) => state.couponError);
+    const applyCoupon = useCartStore((state) => state.applyCoupon);
+    const removeCoupon = useCartStore((state) => state.removeCoupon);
     const getTotal = useCartStore((state) => state.getTotal);
     const clearCart = useCartStore((state) => state.clearCart);
 
     const [form, setForm] = useState({ name: '', phone: '', address: '', notes: '' });
+    const [couponCode, setCouponCode] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     const handleChange = (e) => {
@@ -22,6 +27,7 @@ export default function CheckoutForm({ onSubmitted }) {
 
         setSubmitting(false);
         clearCart();
+        setCouponCode('');
         onSubmitted?.();
     };
 
@@ -62,6 +68,45 @@ export default function CheckoutForm({ onSubmitted }) {
                 rows={2}
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
+
+            <div className="space-y-2">
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                        placeholder="Coupon code"
+                        disabled={Boolean(appliedCoupon)}
+                        className="min-w-0 flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100"
+                    />
+                    {appliedCoupon ? (
+                        <button
+                            type="button"
+                            onClick={() => {
+                                removeCoupon();
+                                setCouponCode('');
+                            }}
+                            className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-50"
+                        >
+                            Remove
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => applyCoupon(couponCode)}
+                            className="rounded-lg bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700"
+                        >
+                            Apply
+                        </button>
+                    )}
+                </div>
+                {appliedCoupon && (
+                    <p className="text-sm text-green-600">
+                        {appliedCoupon.code} applied: {appliedCoupon.discountPercent}% off
+                    </p>
+                )}
+                {couponError && <p className="text-sm text-red-500">{couponError}</p>}
+            </div>
 
             <button
                 type="submit"

@@ -7,7 +7,8 @@ export default function Cart() {
     const isOpen = useCartStore((state) => state.isOpen);
     const closeCart = useCartStore((state) => state.closeCart);
     const items = useCartStore((state) => state.items);
-    const getTotal = useCartStore((state) => state.getTotal);
+    const getSubtotal = useCartStore((state) => state.getSubtotal);
+    const getDiscount = useCartStore((state) => state.getDiscount);
 
     const [orderPlaced, setOrderPlaced] = useState(false);
 
@@ -67,8 +68,14 @@ export default function Cart() {
                         <div className="border-t border-gray-200 pt-4 mt-4">
                             <div className="flex justify-between text-gray-700 font-medium mb-2">
                                 <span>Subtotal</span>
-                                <span>${getTotal().toFixed(2)}</span>
+                                <span>${getSubtotal().toFixed(2)}</span>
                             </div>
+                            {getDiscount() > 0 && (
+                                <div className="flex justify-between text-sm text-green-600 mb-2">
+                                    <span>Coupon discount</span>
+                                    <span>-${getDiscount().toFixed(2)}</span>
+                                </div>
+                            )}
                             <CheckoutForm onSubmitted={() => setOrderPlaced(true)} />
                         </div>
                     </>
