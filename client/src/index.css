@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@layer base {
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	html {
+		scroll-behavior: smooth;
+	}
+
+	body {
+		margin: 0;
+		min-width: 320px;
+		background: #ffffff;
+		color: #1f2937;
+	}
+
+	img {
+		display: block;
+		max-width: 100%;
+	}
+}
+
+@layer components {
+	main > section {
+		width: 100%;
+	}
+
+	main > section:not(#home) {
+		margin-inline: auto;
+	}
+}
