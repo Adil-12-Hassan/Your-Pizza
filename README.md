@@ -211,7 +211,7 @@ Twelve tables: `admins`, `menu_items`, `deals`, `chefs`, `gallery_items`, `revie
 
 ## Author
 
-**Adil Hassan**: [@Adil-12-Hassan](https://github.com/Adil-12-Hassan)
+**Adil Hassan**: [@Adil-12-Hassan](https://github.com/Adil-12-Hassan) <br>
 **Adil Hassan**: [@adil12hassan](https://code-with-hassan-phi.vercel.app)
 
 ## License
