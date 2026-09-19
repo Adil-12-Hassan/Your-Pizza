@@ -3,7 +3,7 @@ import { MENU_TYPES } from '../../utils/demoMenuData';
 
 const emptyItem = { name: '', description: '', chef: '', price: '', image: '', type: 'Pizzas' };
 
-export default function MenuItemForm({ initialData, onSave, onCancel }) {
+export default function MenuItemForm({ initialData, chefs = [], onSave, onCancel }) {
     const [form, setForm] = useState(initialData || emptyItem);
 
     const handleChange = (e) => {
@@ -31,14 +31,15 @@ export default function MenuItemForm({ initialData, onSave, onCancel }) {
                     required
                     className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
-                <input
-                    type="text"
+                <select
                     name="chef"
-                    placeholder="Chef Name"
                     value={form.chef}
                     onChange={handleChange}
                     className="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
+                >
+                    <option value="">No chef assigned</option>
+                    {chefs.map((chef) => <option key={chef.id} value={chef.name}>{chef.name}</option>)}
+                </select>
                 <input
                     type="number"
                     step="0.01"

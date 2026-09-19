@@ -1,32 +1,37 @@
-import { useState } from 'react';
-import { DEMO_MENU_ITEMS } from '../../utils/demoMenuData';
+import { useEffect, useState } from 'react';
+import { adminChefService, adminMenuService } from '../../services/adminService';
 import MenuItemForm from './MenuItemForm';
 
 export default function MenuManager() {
-  const [items, setItems] = useState(DEMO_MENU_ITEMS);
+  const [items, setItems] = useState([]);
+  const [chefs, setChefs] = useState([]);
+  const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const editingItem = items.find((i) => i.id === editingId);
 
-  const handleAdd = (newItem) => {
-    // TODO: replace with real menuService.createItem(newItem)
-    setItems((prev) => [...prev, { ...newItem, id: Date.now() }]);
+  useEffect(() => {
+    Promise.all([adminMenuService.list(), adminChefService.list()])
+      .then(([menu, chefList]) => { setItems(menu); setChefs(chefList); })
+      .catch(() => setError('Unable to load menu data.'));
+  }, []);
+
+  const handleAdd = async (newItem) => {
+    try { const created = await adminMenuService.create(newItem); setItems((prev) => [...prev, created]); setError('');
     setShowAddForm(false);
+    } catch { setError('Unable to create menu item.'); }
   };
 
-  const handleUpdate = (updatedItem) => {
-    // TODO: replace with real menuService.updateItem(updatedItem.id, updatedItem)
-    setItems((prev) =>
-      prev.map((i) => (i.id === editingId ? { ...updatedItem, id: editingId } : i))
-    );
-    setEditingId(null);
+  const handleUpdate = async (updatedItem) => {
+    try { const saved = await adminMenuService.update(editingId, updatedItem); setItems((prev) => prev.map((item) => item.id === saved.id ? saved : item)); setEditingId(null); setError('');
+    } catch { setError('Unable to update menu item.'); }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!confirm('Delete this menu item?')) return;
-    // TODO: replace with real menuService.deleteItem(id)
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    try { await adminMenuService.remove(id); setItems((prev) => prev.filter((i) => i.id !== id)); setError('');
+    } catch { setError('Unable to delete menu item.'); }
   };
 
   return (
@@ -43,9 +48,11 @@ export default function MenuManager() {
         )}
       </div>
 
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+
       {showAddForm && (
         <div className="mb-6">
-          <MenuItemForm onSave={handleAdd} onCancel={() => setShowAddForm(false)} />
+          <MenuItemForm chefs={chefs} onSave={handleAdd} onCancel={() => setShowAddForm(false)} />
         </div>
       )}
 
@@ -54,6 +61,7 @@ export default function MenuManager() {
           <MenuItemForm
             key={editingId}
             initialData={editingItem}
+            chefs={chefs}
             onSave={handleUpdate}
             onCancel={() => setEditingId(null)}
           />

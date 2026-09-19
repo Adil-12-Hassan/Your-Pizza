@@ -1,37 +1,31 @@
-import { useState } from 'react';
-import { SIMPLE_DEALS, FAMILY_DEALS } from '../../utils/demoDealsData';
+import { useEffect, useState } from 'react';
+import { adminDealService } from '../../services/adminService';
 import DealFormFields from './DealsFormFields';
 
-const initialDeals = [
-  ...SIMPLE_DEALS.map((d) => ({ ...d, category: 'simple' })),
-  ...FAMILY_DEALS.map((d) => ({ ...d, category: 'family' })),
-];
-
 export default function DealsManager() {
-  const [deals, setDeals] = useState(initialDeals);
+  const [deals, setDeals] = useState([]);
+  const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const editingDeal = deals.find((d) => d.id === editingId);
 
-  const handleAdd = (newDeal) => {
-    // TODO: replace with real dealService.createDeal(newDeal)
-    setDeals((prev) => [...prev, { ...newDeal, id: Date.now() }]);
-    setShowAddForm(false);
+  useEffect(() => { adminDealService.list().then(setDeals).catch(() => setError('Unable to load deals.')); }, []);
+
+  const handleAdd = async (newDeal) => {
+    try { const created = await adminDealService.create(newDeal); setDeals((prev) => [...prev, created]); setShowAddForm(false); setError('');
+    } catch { setError('Unable to create deal.'); }
   };
 
-  const handleUpdate = (updatedDeal) => {
-    // TODO: replace with real dealService.updateDeal(editingId, updatedDeal)
-    setDeals((prev) =>
-      prev.map((d) => (d.id === editingId ? { ...updatedDeal, id: editingId } : d))
-    );
-    setEditingId(null);
+  const handleUpdate = async (updatedDeal) => {
+    try { const saved = await adminDealService.update(editingId, updatedDeal); setDeals((prev) => prev.map((deal) => deal.id === saved.id ? saved : deal)); setEditingId(null); setError('');
+    } catch { setError('Unable to update deal.'); }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!confirm('Delete this deal?')) return;
-    // TODO: replace with real dealService.deleteDeal(id)
-    setDeals((prev) => prev.filter((d) => d.id !== id));
+    try { await adminDealService.remove(id); setDeals((prev) => prev.filter((deal) => deal.id !== id)); setError('');
+    } catch { setError('Unable to delete deal.'); }
   };
 
   return (
@@ -47,6 +41,8 @@ export default function DealsManager() {
           </button>
         )}
       </div>
+
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
       {showAddForm && (
         <div className="mb-6">

@@ -1,0 +1,195 @@
+{
+  "menu_items": [
+    {
+      "name": "Margherita Pizza",
+      "type": "Pizzas",
+      "description": "Classic tomato, mozzarella & basil.",
+      "price": 8.99,
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Pepperoni Pizza",
+      "type": "Pizzas",
+      "description": "Loaded with spicy pepperoni.",
+      "price": 10.99,
+      "image": "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "BBQ Chicken Pizza",
+      "type": "Pizzas",
+      "description": "Grilled chicken, BBQ sauce, red onions.",
+      "price": 11.99,
+      "image": "https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Classic Beef Burger",
+      "type": "Burgers",
+      "description": "Juicy beef patty with cheddar & lettuce.",
+      "price": 7.49,
+      "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Crispy Chicken Burger",
+      "type": "Burgers",
+      "description": "Crispy fried chicken with spicy mayo.",
+      "price": 6.99,
+      "image": "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Creamy Alfredo Pasta",
+      "type": "Pastas",
+      "description": "Fettuccine in rich alfredo sauce.",
+      "price": 9.49,
+      "image": "https://images.unsplash.com/photo-1645112411341-6c4fd023714a?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Spicy Arrabiata Pasta",
+      "type": "Pastas",
+      "description": "Penne tossed in a spicy tomato sauce.",
+      "price": 8.49,
+      "image": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=900&q=80"
+    },
+    {
+      "name": "Chef's Special Platter",
+      "type": "Special",
+      "description": "A mix of our chef's finest creations.",
+      "price": 15.99,
+      "image": "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=900&q=80"
+    }
+  ],
+  "deals": [
+    {
+      "name": "Solo Slice Combo",
+      "description": "1 Regular Pizza Slice + Drink",
+      "price": 5.99,
+      "old_price": 7.99,
+      "image": "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=80",
+      "category": "simple"
+    },
+    {
+      "name": "Lunch Special",
+      "description": "1 Medium Pizza + Fries",
+      "price": 8.99,
+      "old_price": 11.99,
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80",
+      "category": "simple"
+    },
+    {
+      "name": "Burger Combo",
+      "description": "1 Burger + Fries + Drink",
+      "price": 7.49,
+      "old_price": 9.49,
+      "image": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=80",
+      "category": "simple"
+    },
+    {
+      "name": "Family Feast",
+      "description": "2 Large Pizzas + 4 Drinks + Garlic Bread",
+      "price": 24.99,
+      "old_price": 32.99,
+      "image": "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=80",
+      "category": "family"
+    },
+    {
+      "name": "Party Pack",
+      "description": "3 Large Pizzas + 6 Drinks + 2 Sides",
+      "price": 34.99,
+      "old_price": 45.99,
+      "image": "https://images.unsplash.com/photo-1548365328-8b849e6f90c6?auto=format&fit=crop&w=900&q=80",
+      "category": "family"
+    }
+  ],
+  "chefs": [
+    {
+      "name": "Marco Rossi",
+      "title": "Head Pizza Chef",
+      "image": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=600&q=80",
+      "bio": "15+ years perfecting wood-fired Neapolitan pizza.",
+      "signatureMenuIndex": 0
+    },
+    {
+      "name": "Aisha Khan",
+      "title": "Grill & Burger Specialist",
+      "image": "https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80",
+      "bio": "Known for her signature spicy sauces and juicy patties.",
+      "signatureMenuIndex": 3
+    },
+    {
+      "name": "Luca Bianchi",
+      "title": "Pasta Chef",
+      "image": "https://images.unsplash.com/photo-1583394293214-28ded15ee548?auto=format&fit=crop&w=600&q=80",
+      "bio": "Trained in Rome, brings authentic Italian pasta to your table.",
+      "signatureMenuIndex": 5
+    }
+  ],
+  "gallery_items": [
+    {
+      "image": "https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=80",
+      "caption": "Fresh out of the wood-fired oven"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=900&q=80",
+      "caption": "Our cozy dining hall"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&w=900&q=80",
+      "caption": "Family night event, 2025"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=900&q=80",
+      "caption": "Hand-tossed dough, every time"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=900&q=80",
+      "caption": "Chef Marco at work"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=900&q=80",
+      "caption": "Weekend BBQ special"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80",
+      "caption": "Fresh ingredients, daily"
+    },
+    {
+      "image": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=80",
+      "caption": "Our team celebrating a milestone"
+    }
+  ],
+  "reviews": [
+    {
+      "name": "Sarah Johnson",
+      "rating": 5,
+      "comment": "Best pizza in town! The crust is perfectly crispy and the toppings are always fresh.",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80"
+    },
+    {
+      "name": "Ahmed Raza",
+      "rating": 5,
+      "comment": "Ordered the Family Feast for a get-together — everyone loved it. Will order again!",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80"
+    },
+    {
+      "name": "Emily Chen",
+      "rating": 4,
+      "comment": "Great flavors and quick delivery. The burger combo is my personal favorite.",
+      "avatar": "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=200&q=80"
+    }
+  ],
+  "coupons": [
+    {
+      "code": "WELCOME10",
+      "discount_percent": 10,
+      "expiry_date": "2026-10-15",
+      "max_uses": 100,
+      "used_count": 23
+    },
+    {
+      "code": "FAMILY20",
+      "discount_percent": 20,
+      "expiry_date": "2026-09-30",
+      "max_uses": 50,
+      "used_count": 50
+    }
+  ]
+}

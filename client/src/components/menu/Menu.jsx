@@ -1,14 +1,15 @@
-import { useState, useMemo } from 'react';
-import { DEMO_MENU_ITEMS } from '../../utils/demoMenuData';
+import { useState, useEffect } from 'react';
+import { contentService } from '../../services/contentService';
 import MenuFilter from './MenuFilter';
 import MenuItemCard from './MenuItemCard';
 
 export default function Menu() {
     const [activeType, setActiveType] = useState('All');
+    const [items, setItems] = useState([]);
+    const [error, setError] = useState('');
 
-    const filteredItems = useMemo(() => {
-        if (activeType === 'All') return DEMO_MENU_ITEMS;
-        return DEMO_MENU_ITEMS.filter((item) => item.type === activeType);
+    useEffect(() => {
+        contentService.getMenu(activeType).then(setItems).catch(() => setError('Menu is temporarily unavailable.'));
     }, [activeType]);
 
     return (
@@ -22,8 +23,9 @@ export default function Menu() {
 
             <MenuFilter activeType={activeType} onSelect={setActiveType} />
 
+            {error && <p className="text-center text-red-500 mb-6">{error}</p>}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {filteredItems.map((item) => (
+                {items.map((item) => (
                     <MenuItemCard key={item.id} item={item} />
                 ))}
             </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { contactService } from '../../services/contentService';
 
 const initialForm = { name: '', email: '', message: '' };
 
@@ -15,12 +16,15 @@ export default function Contact() {
         e.preventDefault();
         setSubmitting(true);
 
-        // TODO: replace with real contactService.sendMessage(form)
-        await new Promise((res) => setTimeout(res, 600));
-
-        setSubmitting(false);
-        setSubmitted(true);
-        setForm(initialForm);
+        try {
+            await contactService.send(form);
+            setSubmitted(true);
+            setForm(initialForm);
+        } catch (error) {
+            window.alert(error.response?.data?.message || 'Unable to send your message. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (

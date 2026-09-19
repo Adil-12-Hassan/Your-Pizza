@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { reserveService } from '../../services/contentService';
 
 const initialForm = {
     name: '',
@@ -23,12 +24,15 @@ export default function ReserveForm() {
         e.preventDefault();
         setSubmitting(true);
 
-        // TODO: replace with real reserveService.createBooking(form)
-        await new Promise((res) => setTimeout(res, 600));
-
-        setSubmitting(false);
-        setSubmitted(true);
-        setForm(initialForm);
+        try {
+            await reserveService.create(form);
+            setSubmitted(true);
+            setForm(initialForm);
+        } catch (error) {
+            window.alert(error.response?.data?.message || 'Unable to create reservation. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     if (submitted) {

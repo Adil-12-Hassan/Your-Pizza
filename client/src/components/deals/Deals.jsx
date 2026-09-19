@@ -1,7 +1,16 @@
+import { useEffect, useState } from 'react';
+import { contentService } from '../../services/contentService';
 import SimpleDeals from './SimpleDeals';
 import FamilyDeals from './FamilyDeals';
 
 export default function Deals() {
+    const [deals, setDeals] = useState([]);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        contentService.getDeals().then(setDeals).catch(() => setError('Deals are temporarily unavailable.'));
+    }, []);
+
     return (
         <section id="deals" className="w-full bg-orange-50/40 py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -12,8 +21,9 @@ export default function Deals() {
                 Save more when you order smart.
             </p>
 
-                <SimpleDeals />
-                <FamilyDeals />
+                {error && <p className="text-center text-red-500 mb-6">{error}</p>}
+                <SimpleDeals deals={deals.filter((deal) => deal.category === 'simple')} />
+                <FamilyDeals deals={deals.filter((deal) => deal.category === 'family')} />
             </div>
         </section>
     );

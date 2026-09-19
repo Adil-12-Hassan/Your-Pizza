@@ -25,7 +25,7 @@ export default function DealCard({ deal }) {
                     </span>
                 </div>
                 <button
-                    onClick={() => addItem({ ...deal, price: deal.price })}
+                    onClick={() => addItem({ ...deal, itemType: 'deal', price: deal.price })}
                     className="mt-3 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold py-2 rounded-full transition-colors"
                 >
                     Grab This Deal

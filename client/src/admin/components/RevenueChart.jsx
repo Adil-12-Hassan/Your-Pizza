@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Doughnut, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -10,30 +10,34 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
-import { REVENUE_BREAKDOWN, MONTHLY_REVENUE, TOTAL_REVENUE } from '../../utils/demiRevenueData';
+import { adminRevenueService } from '../../services/adminService';
 
 ChartJS.register(ArcElement, LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const DOUGHNUT_COLORS = ['#ea580c', '#f97316', '#fb923c', '#fdba74'];
 
 export default function RevenueChart() {
-    const [total, setTotal] = useState(TOTAL_REVENUE);
-    const [breakdown, setBreakdown] = useState(REVENUE_BREAKDOWN);
-    const [monthly, setMonthly] = useState(MONTHLY_REVENUE);
+    const [total, setTotal] = useState(0);
+    const [monthly, setMonthly] = useState({ labels: [], values: [] });
+    const [error, setError] = useState('');
 
-    const handleClearRevenue = () => {
+    const load = () => adminRevenueService.get().then((data) => {
+        setTotal(Number(data.total));
+        const entries = Object.entries(data.monthly || {});
+        setMonthly({ labels: entries.map(([label]) => label), values: entries.map(([, value]) => Number(value)) });
+    }).catch(() => setError('Unable to load revenue.'));
+    useEffect(() => { load(); }, []);
+
+    const handleClearRevenue = async () => {
         if (!confirm('Clear all revenue data? This cannot be undone.')) return;
-        // TODO: replace with real revenueService.clearRevenue()
-        setTotal(0);
-        setBreakdown(breakdown.map((b) => ({ ...b, value: 0 })));
-        setMonthly({ ...monthly, values: monthly.values.map(() => 0) });
+        try { await adminRevenueService.clear(); await load(); } catch { setError('Unable to clear revenue.'); }
     };
 
     const doughnutData = {
-        labels: breakdown.map((b) => b.label),
+        labels: ['Revenue'],
         datasets: [
             {
-                data: breakdown.map((b) => b.value),
+                data: [total],
                 backgroundColor: DOUGHNUT_COLORS,
                 borderWidth: 0,
             },
@@ -58,13 +62,10 @@ export default function RevenueChart() {
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-900">Revenue</h2>
-                <button
-                    onClick={handleClearRevenue}
-                    className="bg-red-50 hover:bg-red-100 text-red-600 text-sm font-semibold px-4 py-2 rounded-full transition-colors"
-                >
-                    Clear Revenue
-                </button>
+                <div className="flex gap-2"><button onClick={() => adminRevenueService.exportCsv().catch(() => setError('Unable to export revenue.'))} className="rounded-full bg-gray-100 px-4 py-2 text-sm font-semibold">Download CSV</button><button onClick={handleClearRevenue} className="rounded-full bg-red-50 px-4 py-2 text-sm font-semibold text-red-600">Clear Revenue</button></div>
             </div>
+
+            {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <p className="text-gray-500 text-sm">Total Revenue</p>
@@ -73,7 +74,7 @@ export default function RevenueChart() {
 
             <div className="grid lg:grid-cols-2 gap-6">
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h3 className="font-semibold text-gray-900 mb-4">Revenue by Category</h3>
+                    <h3 className="font-semibold text-gray-900 mb-4">Revenue Total</h3>
                     <div className="max-w-xs mx-auto">
                         <Doughnut data={doughnutData} />
                     </div>

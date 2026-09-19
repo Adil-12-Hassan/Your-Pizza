@@ -1,32 +1,31 @@
-import { useState } from 'react';
-import { DEMO_GALLERY_ITEMS } from '../../utils/demoGalleryData';
+import { useEffect, useState } from 'react';
+import { adminGalleryService } from '../../services/adminService';
 import GalleryItemForm from './GallertItemForm';
 
 export default function GalleryManager() {
-  const [items, setItems] = useState(DEMO_GALLERY_ITEMS);
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const editingItem = items.find((i) => i.id === editingId);
 
-  const handleAdd = (newItem) => {
-    // TODO: replace with real galleryService.createImage(newItem)
-    setItems((prev) => [...prev, { ...newItem, id: Date.now() }]);
-    setShowAddForm(false);
+  useEffect(() => { adminGalleryService.list().then(setItems).catch(() => setError('Unable to load gallery.')); }, []);
+
+  const handleAdd = async (newItem) => {
+    try { const created = await adminGalleryService.create(newItem); setItems((prev) => [...prev, created]); setShowAddForm(false); setError('');
+    } catch { setError('Unable to create gallery item.'); }
   };
 
-  const handleUpdate = (updatedItem) => {
-    // TODO: replace with real galleryService.updateImage(editingId, updatedItem)
-    setItems((prev) =>
-      prev.map((i) => (i.id === editingId ? { ...updatedItem, id: editingId } : i))
-    );
-    setEditingId(null);
+  const handleUpdate = async (updatedItem) => {
+    try { const saved = await adminGalleryService.update(editingId, updatedItem); setItems((prev) => prev.map((item) => item.id === saved.id ? saved : item)); setEditingId(null); setError('');
+    } catch { setError('Unable to update gallery item.'); }
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (!confirm('Delete this image from the gallery?')) return;
-    // TODO: replace with real galleryService.deleteImage(id)
-    setItems((prev) => prev.filter((i) => i.id !== id));
+    try { await adminGalleryService.remove(id); setItems((prev) => prev.filter((item) => item.id !== id)); setError('');
+    } catch { setError('Unable to delete gallery item.'); }
   };
 
   return (
@@ -42,6 +41,8 @@ export default function GalleryManager() {
           </button>
         )}
       </div>
+
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
       {showAddForm && (
         <div className="mb-6">

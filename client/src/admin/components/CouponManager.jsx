@@ -1,21 +1,30 @@
-import { useState } from 'react';
-import { DEMO_COUPONS } from '../../utils/demoCouponsData';
+import { useEffect, useState } from 'react';
 import CouponForm from './CouponForm';
+import { adminCouponService } from '../../services/adminService';
 
 export default function CouponManager() {
-  const [coupons, setCoupons] = useState(DEMO_COUPONS);
+  const [coupons, setCoupons] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingCoupon, setEditingCoupon] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleAdd = (newCoupon) => {
-    // TODO: replace with real couponService.createCoupon(newCoupon)
-    setCoupons((prev) => [...prev, { ...newCoupon, id: Date.now() }]);
-    setShowAddForm(false);
+  useEffect(() => { adminCouponService.list().then(setCoupons).catch(() => setError('Unable to load coupons.')); }, []);
+
+  const handleAdd = async (newCoupon) => {
+    try { const created = await adminCouponService.create({ code: newCoupon.code, discount_percent: newCoupon.discountPercent, expiry_date: newCoupon.expiryDate, max_uses: newCoupon.maxUses }); setCoupons((prev) => [...prev, created]); setShowAddForm(false); } catch { setError('Unable to create coupon.'); }
   };
 
-  const handleDelete = (id) => {
+  const handleEdit = async (updatedCoupon) => {
+    try {
+      const updated = await adminCouponService.update(editingCoupon.id, { code: updatedCoupon.code, discount_percent: updatedCoupon.discountPercent, expiry_date: updatedCoupon.expiryDate, max_uses: updatedCoupon.maxUses });
+      setCoupons((prev) => prev.map((coupon) => coupon.id === updated.id ? updated : coupon));
+      setEditingCoupon(null);
+    } catch { setError('Unable to update coupon.'); }
+  };
+
+  const handleDelete = async (id) => {
     if (!confirm('Delete this coupon?')) return;
-    // TODO: replace with real couponService.deleteCoupon(id)
-    setCoupons((prev) => prev.filter((c) => c.id !== id));
+    try { await adminCouponService.remove(id); setCoupons((prev) => prev.filter((coupon) => coupon.id !== id)); } catch { setError('Unable to delete coupon.'); }
   };
 
   const isExpiredOrUsedUp = (coupon) =>
@@ -25,7 +34,7 @@ export default function CouponManager() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">Coupons</h2>
-        {!showAddForm && (
+        {!showAddForm && !editingCoupon && (
           <button
             onClick={() => setShowAddForm(true)}
             className="bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors"
@@ -34,10 +43,17 @@ export default function CouponManager() {
           </button>
         )}
       </div>
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
-      {showAddForm && (
+      {showAddForm && !editingCoupon && (
         <div className="mb-6">
           <CouponForm onSave={handleAdd} onCancel={() => setShowAddForm(false)} />
+        </div>
+      )}
+
+      {editingCoupon && (
+        <div className="mb-6">
+          <CouponForm coupon={{ code: editingCoupon.code, discountPercent: editingCoupon.discountPercent, expiryDate: editingCoupon.expiryDate.slice(0, 10), maxUses: editingCoupon.maxUses }} onSave={handleEdit} onCancel={() => setEditingCoupon(null)} />
         </div>
       )}
 
@@ -79,6 +95,12 @@ export default function CouponManager() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
+                    <button
+                      onClick={() => { setEditingCoupon(coupon); setShowAddForm(false); setError(''); }}
+                      className="text-blue-600 hover:underline text-xs font-medium mr-3"
+                    >
+                      Edit
+                    </button>
                     <button
                       onClick={() => handleDelete(coupon.id)}
                       className="text-red-500 hover:underline text-xs font-medium"

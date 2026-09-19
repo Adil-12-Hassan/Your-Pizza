@@ -1,14 +1,17 @@
 import { create } from "zustand";
+import api from '../services/api';
 export const useAuthStore = create((set) => ({
     isAuthenticated: !!localStorage.getItem('admin_token'),
     admin: null,
     login: async (email, password) => {
-        await new Promise((res) => setTimeout(res, 500));
-        if (email === 'admin@pizzashop.com' && password === 'Admin@PizzaShop') {
-            localStorage.setItem('admin_token', 'demo_token');
+        try {
+            const { data } = await api.post('/admin/auth/login', { email, password });
+            localStorage.setItem('admin_token', data.token);
+            set({ isAuthenticated: true, admin: data.admin });
             return { success: true };
+        } catch (error) {
+            return { success: false, error: error.response?.data?.message || 'Unable to sign in.' };
         }
-        return { success: false, error: 'Invalid email or password.' };
     },
     logout: () => {
         localStorage.removeItem('admin_token');

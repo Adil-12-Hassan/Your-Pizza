@@ -1,27 +1,27 @@
-import { useState } from 'react';
-import { DEMO_MESSAGES } from '../../utils/demoMessagesData';
+import { useEffect, useState } from 'react';
+import { adminMessageService } from '../../services/adminService';
 
 export default function MessagesList() {
-    const [messages, setMessages] = useState(DEMO_MESSAGES);
+    const [messages, setMessages] = useState([]);
     const [expandedId, setExpandedId] = useState(null);
+    const [error, setError] = useState('');
+
+    useEffect(() => { adminMessageService.list().then(setMessages).catch(() => setError('Unable to load messages.')); }, []);
 
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
-        // TODO: replace with real messageService.markAsRead(id)
-        setMessages((prev) =>
-            prev.map((m) => (m.id === id ? { ...m, read: true } : m))
-        );
+        adminMessageService.markRead(id).then(() => setMessages((prev) => prev.map((message) => message.id === id ? { ...message, read: true } : message))).catch(() => setError('Unable to mark message as read.'));
     };
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (!confirm('Delete this message?')) return;
-        // TODO: replace with real messageService.deleteMessage(id)
-        setMessages((prev) => prev.filter((m) => m.id !== id));
+        try { await adminMessageService.remove(id); setMessages((prev) => prev.filter((message) => message.id !== id)); } catch { setError('Unable to delete message.'); }
     };
 
     return (
         <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Messages</h2>
+            {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
             <div className="space-y-3">
                 {messages.length === 0 && (

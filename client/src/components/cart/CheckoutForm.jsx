@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCartStore } from '../../store/cartStore';
+import { orderService } from '../../services/contentService';
 
 export default function CheckoutForm({ onSubmitted }) {
     const items = useCartStore((state) => state.items);
@@ -22,13 +23,16 @@ export default function CheckoutForm({ onSubmitted }) {
         e.preventDefault();
         setSubmitting(true);
 
-        // TODO: replace with real orderService.createOrder({ ...form, items, total: getTotal() })
-        await new Promise((res) => setTimeout(res, 600));
-
-        setSubmitting(false);
-        clearCart();
-        setCouponCode('');
-        onSubmitted?.();
+        try {
+            await orderService.create({ ...form, items, couponCode: appliedCoupon?.code || null });
+            clearCart();
+            setCouponCode('');
+            onSubmitted?.();
+        } catch (error) {
+            window.alert(error.response?.data?.message || 'Unable to place your order. Please try again.');
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return (

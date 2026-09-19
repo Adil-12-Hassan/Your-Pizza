@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { DEMO_COUPONS } from '../utils/demoCouponsData';
+import { contentService } from '../services/contentService';
 
 export const useCartStore = create((set, get) => ({
     items: [],
@@ -35,27 +35,22 @@ export const useCartStore = create((set, get) => ({
     clearCart: () => set({ items: [], appliedCoupon: null, couponError: '' }),
     toggleCart: () => set((state) => ({ isOpen: !state.isOpen })),
     closeCart: () => set({ isOpen: false }),
-    applyCoupon: (code) => {
+    applyCoupon: async (code) => {
         const normalizedCode = code.trim().toUpperCase();
-        const coupon = DEMO_COUPONS.find((item) => item.code === normalizedCode);
 
         if (!normalizedCode) {
             set({ appliedCoupon: null, couponError: 'Enter a coupon code.' });
             return false;
         }
 
-        if (!coupon) {
-            set({ appliedCoupon: null, couponError: 'That coupon code is not valid.' });
+        try {
+            const coupon = await contentService.validateCoupon(normalizedCode);
+            set({ appliedCoupon: coupon, couponError: '' });
+            return true;
+        } catch (error) {
+            set({ appliedCoupon: null, couponError: error.response?.data?.message || 'That coupon code is not valid.' });
             return false;
         }
-
-        if (new Date(coupon.expiryDate) < new Date() || coupon.usedCount >= coupon.maxUses) {
-            set({ appliedCoupon: null, couponError: 'That coupon has expired or reached its usage limit.' });
-            return false;
-        }
-
-        set({ appliedCoupon: coupon, couponError: '' });
-        return true;
     },
     removeCoupon: () => set({ appliedCoupon: null, couponError: '' }),
     getSubtotal: () =>

@@ -1,7 +1,14 @@
-import { DEMO_REVIEWS } from '../../utils/demoReviewsData';
+import { useEffect, useState } from 'react';
+import { contentService } from '../../services/contentService';
 import ReviewCard from './ReviewCard';
 
 export default function Reviews() {
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+        contentService.getReviews().then(setReviews).catch(() => {});
+    }, []);
+
     return (
         <section id="reviews" className="w-full bg-orange-50/40 py-16">
             <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -13,7 +20,7 @@ export default function Reviews() {
             </p>
 
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {DEMO_REVIEWS.map((review) => (
+                    {reviews.map((review) => (
                         <ReviewCard key={review.id} review={review} />
                     ))}
                 </div>

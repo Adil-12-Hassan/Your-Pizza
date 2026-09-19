@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { DEMO_BOOKINGS, BOOKING_STATUSES } from '../../utils/demoBookingsData';
+import { useEffect, useState } from 'react';
+import { BOOKING_STATUSES } from '../../utils/demoBookingsData';
+import { adminBookingService } from '../../services/adminService';
 
 const STATUS_STYLES = {
     pending: 'bg-yellow-50 text-yellow-700',
@@ -8,13 +9,14 @@ const STATUS_STYLES = {
 };
 
 export default function BookingsList() {
-    const [bookings, setBookings] = useState(DEMO_BOOKINGS);
+    const [bookings, setBookings] = useState([]);
+    const [error, setError] = useState('');
+
+    const load = () => adminBookingService.list().then(setBookings).catch(() => setError('Unable to load bookings.'));
+    useEffect(() => { load(); }, []);
 
     const handleStatusChange = (id, newStatus) => {
-        // TODO: replace with real bookingService.updateStatus(id, newStatus)
-        setBookings((prev) =>
-            prev.map((b) => (b.id === id ? { ...b, status: newStatus } : b))
-        );
+        adminBookingService.updateStatus(id, newStatus).then((updated) => setBookings((prev) => prev.map((booking) => booking.id === id ? updated : booking))).catch(() => setError('Unable to update booking.'));
     };
 
     const sorted = [...bookings].sort(
@@ -24,6 +26,7 @@ export default function BookingsList() {
     return (
         <div>
             <h2 className="text-2xl font-bold text-gray-900 mb-6">Bookings</h2>
+            {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
             <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
                 <table className="w-full text-sm">
@@ -42,7 +45,7 @@ export default function BookingsList() {
                             <tr key={booking.id} className="border-t border-gray-100">
                                 <td className="px-4 py-3 font-medium text-gray-900">{booking.name}</td>
                                 <td className="px-4 py-3 text-gray-500">
-                                    {new Date(booking.date).toLocaleDateString()} · {booking.time}
+                                    {new Date(`${booking.date}T${booking.time}`).toLocaleDateString()} · {booking.time}
                                 </td>
                                 <td className="px-4 py-3 text-gray-500">{booking.guests}</td>
                                 <td className="px-4 py-3 text-gray-500">

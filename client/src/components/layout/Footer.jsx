@@ -11,7 +11,7 @@ export default function Footer() {
         <footer className="bg-gray-900 text-gray-300 pt-14 pb-8 px-4 md:px-8">
             <div className="max-w-7xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
                 <div>
-                    <h3 className="text-white text-xl font-bold mb-3">🍕 PizzaShop</h3>
+                    <h3 className="text-white text-xl font-bold mb-3">🍕 Pizza<span>.</span>Com</h3>
                     <p className="text-sm text-gray-400">
                         Handmade pizzas, sizzling deals, and flavors crafted with love — delivered fast.
                     </p>
@@ -33,9 +33,9 @@ export default function Footer() {
                 <div>
                     <h4 className="text-white font-semibold mb-3">Contact Us</h4>
                     <ul className="space-y-2 text-sm text-gray-400">
-                        <li>123 Main Street, Lahore, Pakistan</li>
+                        <li>Iqbal Nagar Road, Sahiwal, Pubjab Pakistan</li>
                         <li>+92 300 1234567</li>
-                        <li>hello@pizzashop.com</li>
+                        <li>contact@pizzashop.com</li>
                     </ul>
                 </div>
 

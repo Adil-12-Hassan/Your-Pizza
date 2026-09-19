@@ -3,6 +3,7 @@ import AdminSidebar from '../components/AdminSidebar';
 import DashboardOverview from '../components/DashboardOverview';
 import RevenueChart from '../components/RevenueChart';
 import MenuManager from '../components/MenuManager';
+import ChefManager from '../components/ChefManager';
 import DealsManager from '../components/DealsManager';
 import GalleryManager from '../components/GalleryManager';
 import MessagesList from '../components/MessagesList';
@@ -14,6 +15,7 @@ const SECTION_COMPONENTS = {
     overview: DashboardOverview,
     revenue: RevenueChart,
     menu: MenuManager,
+    chefs: ChefManager,
     deals: DealsManager,
     gallery: GalleryManager,
     messages: MessagesList,

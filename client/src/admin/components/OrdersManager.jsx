@@ -1,19 +1,26 @@
-import { useState } from 'react';
-import { DEMO_ORDERS, ORDER_STATUSES } from '../../utils/demoOrdersData';
+import { useEffect, useState } from 'react';
+import { ORDER_STATUSES } from '../../utils/demoOrdersData';
+import { adminOrderService } from '../../services/adminService';
 import OrderStatusBadge from './OrderStatusBadge';
 
 const FILTERS = ['all', ...ORDER_STATUSES];
 
 export default function OrdersManager() {
-  const [orders, setOrders] = useState(DEMO_ORDERS);
+  const [orders, setOrders] = useState([]);
+  const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
   const [expandedId, setExpandedId] = useState(null);
 
-  const handleStatusChange = (id, newStatus) => {
-    // TODO: replace with real orderService.updateStatus(id, newStatus)
-    setOrders((prev) =>
-      prev.map((order) => (order.id === id ? { ...order, status: newStatus } : order))
-    );
+  const loadOrders = () => adminOrderService.list().then(setOrders).catch(() => setError('Unable to load orders.'));
+  useEffect(() => {
+    loadOrders();
+    const interval = window.setInterval(loadOrders, 10000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try { const updated = await adminOrderService.updateStatus(id, newStatus); setOrders((prev) => prev.map((order) => order.id === id ? { ...order, ...updated } : order)); setError('');
+    } catch { setError('Unable to update order status.'); }
   };
 
   const filteredOrders =
@@ -39,6 +46,8 @@ export default function OrdersManager() {
           ))}
         </div>
       </div>
+
+      {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
       <div className="space-y-3">
         {filteredOrders.length === 0 && (

@@ -1,7 +1,14 @@
-import { DEMO_CHEFS } from '../../utils/demoChefsData';
+import { useEffect, useState } from 'react';
+import { contentService } from '../../services/contentService';
 import ChefCard from './ChefCard';
 
 export default function Chefs() {
+    const [chefs, setChefs] = useState([]);
+
+    useEffect(() => {
+        contentService.getChefs().then(setChefs).catch(() => {});
+    }, []);
+
     return (
         <section id="chefs" className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
             <h2 className="text-3xl font-bold text-center text-gray-900 mb-2">
@@ -12,7 +19,7 @@ export default function Chefs() {
             </p>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {DEMO_CHEFS.map((chef) => (
+                {chefs.map((chef) => (
                     <ChefCard key={chef.id} chef={chef} />
                 ))}
             </div>

@@ -2,7 +2,7 @@
 
 A full-featured pizza shop web application frontend built with React, Tailwind CSS, Zustand, and React Router. Includes a complete customer-facing storefront and an Admin dashboard.
 
-**Live demo:** (Preview)[https://pizza-paradise-gamma.vercel.app/]
+**Live demo:** [Preview](https://pizza-paradise-gamma.vercel.app/)
 
 ---
 

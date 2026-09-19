@@ -1,9 +1,14 @@
 import { Link } from 'react-router-dom';
-import { DEMO_GALLERY_ITEMS } from '../../utils/demoGalleryData';
+import { useEffect, useState } from 'react';
+import { contentService } from '../../services/contentService';
 import GalleryItem from './GalleryItem';
 
 export default function GalleryPreview() {
-    const previewItems = DEMO_GALLERY_ITEMS.slice(0, 6);
+    const [previewItems, setPreviewItems] = useState([]);
+
+    useEffect(() => {
+        contentService.getGallery().then((items) => setPreviewItems(items.slice(0, 6))).catch(() => {});
+    }, []);
 
     return (
         <section id="gallery" className="py-16 px-4 md:px-8 max-w-7xl mx-auto">

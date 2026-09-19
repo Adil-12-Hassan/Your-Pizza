@@ -2,6 +2,7 @@ const SECTIONS = [
     { key: 'overview', label: 'Overview', icon: '🏠' },
     { key: 'revenue', label: 'Revenue', icon: '📊' },
     { key: 'menu', label: 'Menu', icon: '🍕' },
+    { key: 'chefs', label: 'Chefs', icon: '👨‍🍳' },
     { key: 'deals', label: 'Deals', icon: '🏷️' },
     { key: 'gallery', label: 'Gallery', icon: '🖼️' },
     { key: 'messages', label: 'Messages', icon: '✉️' },
