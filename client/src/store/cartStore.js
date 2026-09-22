@@ -6,18 +6,24 @@ export const useCartStore = create((set, get) => ({
     isOpen: false,
     appliedCoupon: null,
     couponError: '',
+    toastMessage: '',
     addItem: (item) =>
         set((state) => {
             const existing = state.items.find((i) => i.id === item.id);
             if (existing) {
                 return {
+                    toastMessage: 'Added to Cart Successfully',
                     items: state.items.map((i) =>
                         i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
                     ),
                 };
             }
-            return { items: [...state.items, { ...item, quantity: 1 }] };
+            return {
+                items: [...state.items, { ...item, quantity: 1 }],
+                toastMessage: 'Added to Cart Successfully',
+            };
         }),
+    clearToast: () => set({ toastMessage: '' }),
     increaseQty: (id) =>
         set((state) => ({
             items: state.items.map((i) =>

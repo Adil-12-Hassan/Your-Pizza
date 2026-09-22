@@ -9,6 +9,7 @@ import GalleryPage from './pages/GalleryPage';
 import AdminLogin from './admin/pages/AdminLogin';
 import AdminDashboard from './admin/pages/AdminDashboard';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import Toast from './components/common/Toast';
 
 function PublicLayout({ children }) {
   const toggleCart = useCartStore((state) => state.toggleCart);
@@ -19,6 +20,7 @@ function PublicLayout({ children }) {
       <Footer />
       <FloatingCartButton onClick={toggleCart} />
       <Cart />
+      <Toast />
     </>
   );
 }

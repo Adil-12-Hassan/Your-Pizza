@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { supabase } from '../../config/supabase.js';
+import { validate } from '../../middleware/validate.js';
+import { messageSchema } from '../../validators/messages.validator.js';
 
 const router = Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', validate(messageSchema), async (req, res, next) => {
 	try {
 		const { name, email, message } = req.body;
 		if (!name || !email || !message) return res.status(400).json({ message: 'Name, email, and message are required.' });

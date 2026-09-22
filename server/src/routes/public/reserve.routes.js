@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import { supabase } from '../../config/supabase.js';
+import { validate } from '../../middleware/validate.js';
+import { bookingSchema } from '../../validators/bookings.validator.js';
 
 const router = Router();
 
-router.post('/', async (req, res, next) => {
+router.post('/', validate(bookingSchema), async (req, res, next) => {
 	try {
 		const { name, phone, email, date, time, guests, notes = '' } = req.body;
 		if (!name || !phone || !email || !date || !time || !guests) {

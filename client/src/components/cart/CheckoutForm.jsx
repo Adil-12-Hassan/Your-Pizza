@@ -51,8 +51,13 @@ export default function CheckoutForm({ onSubmitted }) {
                 name="phone"
                 placeholder="Phone Number"
                 value={form.phone}
-                onChange={handleChange}
+                onChange={(e) => handleChange({ target: { name: 'phone', value: e.target.value.replace(/\D/g, '').slice(0, 11) } })}
                 required
+                inputMode="numeric"
+                pattern="[0-9]{11}"
+                minLength={11}
+                maxLength={11}
+                title="Phone number must be exactly 11 digits"
                 className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             <input
