@@ -13,7 +13,6 @@ if (process.env.JWT_SECRET.length < 32) {
 }
 
 const env = process.env.NODE_ENV || 'development';
-
 export const config = Object.freeze({
   env,
   isProd: env === 'production',

@@ -21,7 +21,6 @@ app.use(express.json({ limit: '1mb' }));
 if (!config.isProd) app.use(morgan('dev'));
 
 app.use('/api', apiLimiter, routes);
-
 app.use(notFound);
 app.use(errorHandler);
 
